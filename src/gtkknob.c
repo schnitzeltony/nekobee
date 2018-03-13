@@ -63,8 +63,8 @@ GError *gerror;
 
 static GtkWidgetClass *parent_class = NULL;
 
-guint gtk_knob_get_type(void) {
-  static guint knob_type = 0;
+GType gtk_knob_get_type(void) {
+  static GType knob_type = 0;
 
   if (!knob_type) {
     GtkTypeInfo knob_info = {

@@ -72,7 +72,7 @@ struct _GtkKnobClass
 };
 
 extern GtkWidget *gtk_knob_new(GtkAdjustment *adjustment);
-extern guint gtk_knob_get_type(void);
+extern GType gtk_knob_get_type(void);
 
 extern GtkAdjustment *gtk_knob_get_adjustment(GtkKnob *knob);
 extern void gtk_knob_set_update_policy(GtkKnob *knob, GtkUpdateType  policy);
