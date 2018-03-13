@@ -11,11 +11,11 @@ APPNAME='nekobee'
 srcdir = '.'
 blddir = 'build'
 
-def set_options(opt):
-    opt.tool_options('compiler_cc')
+def options(opt):
+    opt.load('compiler_c')
 
 def configure(conf):
-    conf.check_tool('compiler_cc')
+    conf.load('compiler_c')
 
     conf.check_cfg(package='dssi', args='--cflags --libs')
     conf.check_cfg(package='liblo', args='--cflags --libs')
@@ -23,14 +23,14 @@ def configure(conf):
 
     conf.env['DSSI_DIR'] = os.path.normpath(os.path.join(conf.env['PREFIX'], 'lib', 'dssi'))
     conf.env['INSTALL_DIR'] = os.path.join(conf.env['DSSI_DIR'], 'nekobee')
+    conf.env.CPPFLAGS = ['-g']
 
     conf.define('INSTALL_DIR', conf.env['INSTALL_DIR'])
     conf.write_config_header('config.h')
 
 def build(bld):
     # DSSI plugin
-    plugin_dssi = bld.new_task_gen('cc', 'shlib')
-    plugin_dssi.env['shlib_PATTERN'] = '%s.so'
+    plugin_dssi = bld(features='c cshlib')
     plugin_dssi.env.append_value("LINKFLAGS", "-lm")
     plugin_dssi.includes = ['.', 'src']
     plugin_dssi.defines = 'HAVE_CONFIG_H'
@@ -45,10 +45,9 @@ def build(bld):
         ]
     plugin_dssi.target = 'nekobee'
     plugin_dssi.install_path = '${DSSI_DIR}/'
-    bld.install_files('${INSTALL_DIR}', 'extra/*')
 
     # DSSI UI executable
-    gui_gtk = bld.new_task_gen('cc', 'program')
+    gui_gtk = bld(features='c cprogram')
     gui_gtk.env.append_value("LINKFLAGS", "-lm")
     gui_gtk.includes = ['.', 'src']
     gui_gtk.defines = 'HAVE_CONFIG_H'
